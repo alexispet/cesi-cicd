@@ -24,6 +24,9 @@ jobs:
   test:
     needs: [build]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: ["chrome", "edge"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache/restore@v3
@@ -39,10 +42,10 @@ jobs:
           install: false
           build: npm run build
           start: npm start
-          browser: chrome
+          browser: ${{ matrix.browser }}
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: Cypress videos
+          name: Cypress videos for ${{ matrix.browser }}
           path: cypress/videos
