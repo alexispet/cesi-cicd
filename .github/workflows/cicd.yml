@@ -51,6 +51,7 @@ jobs:
           path: cypress/videos
 
   deploy:
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - uses: webfactory/ssh-agent@v0.8.0
