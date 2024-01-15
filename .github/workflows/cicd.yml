@@ -40,3 +40,9 @@ jobs:
           build: npm run build
           start: npm start
           browser: chrome
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Cypress videos
+          path: cypress/videos
