@@ -87,6 +87,9 @@ jobs:
   deploy-production:
     needs: [build-and-push-image]
     if: github.ref_type == 'tag'
+    environment: 
+      name: production
+      url: ${{ secrets.SSH_HOST }}
     runs-on: ubuntu-latest
     steps:
       - uses: webfactory/ssh-agent@v0.8.0
@@ -100,6 +103,9 @@ jobs:
   deploy-development:
     needs: [build-and-push-image]
     if: github.ref_name == 'develop'
+    environment: 
+      name: production
+      url: http://15.237.40.167:3000
     runs-on: ubuntu-latest
     steps:
       - uses: webfactory/ssh-agent@v0.8.0
