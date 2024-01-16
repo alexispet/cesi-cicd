@@ -85,7 +85,7 @@ jobs:
           path: cypress/videos
 
   deploy-production:
-    needs: [build-and-push-image]
+    needs: [build-and-push-image, test]
     if: github.ref_type == 'tag'
     environment: 
       name: production
@@ -101,7 +101,7 @@ jobs:
           sudo docker compose -f docker-compose.prod.yml up --pull always -d"
 
   deploy-development:
-    needs: [build-and-push-image]
+    needs: [build-and-push-image, test]
     if: github.ref_name == 'develop'
     environment: 
       name: development
