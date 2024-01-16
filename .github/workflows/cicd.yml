@@ -7,7 +7,6 @@ on: [push]
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  HOST: ${{ secrets.SSH_HOST }}
 
 jobs:
   build-and-push-image:
@@ -90,7 +89,7 @@ jobs:
     if: github.ref_type == 'tag'
     environment: 
       name: production
-      url: ${{ secrets.SSH_HOST }}
+      url: http://15.237.40.167
     runs-on: ubuntu-latest
     steps:
       - uses: webfactory/ssh-agent@v0.8.0
