@@ -84,8 +84,9 @@ jobs:
           name: Cypress videos for ${{ matrix.browser }}
           path: cypress/videos
 
-  deploy:
-    needs: [test]
+  deploy-production:
+    needs: [build-and-push-image]
+    if: github.ref_type == 'tag'
     runs-on: ubuntu-latest
     steps:
       - uses: webfactory/ssh-agent@v0.8.0
@@ -93,4 +94,18 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
       - run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "\
+          cd prod && \
           sudo docker compose -f docker-compose.prod.yml up --pull always -d"
+
+  deploy-development:
+    needs: [build-and-push-image]
+    if: github.ref_name == 'develop'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "\
+          cd dev && \
+          sudo docker compose -f docker-compose.dev.yml up --pull always -d"
