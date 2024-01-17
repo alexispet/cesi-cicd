@@ -4,9 +4,39 @@ services:
       context: .
       target: next
     environment:
-      - NODE_ENV=development
+      NODE_ENV: development
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextdb
+      MYSQL_USER: nextuser
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3001:3000"
+    depends_on:
+      db:
+        condition: service_healthy
     volumes:
       - ".:/app"
     command: ["npm", "run", "dev"]
+
+  db:
+    image: mysql
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: nextdb
+      MYSQL_USER: nextuser
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - "./docker/mysql/data:/var/lib/mysql"
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: "/usr/bin/mysql --user=nextuser --password=nextpassword --execute \"SHOW DATABASES;\""
+      interval: 1m30s
+      timeout: 20s
+      retries: 10
+      start_period: 1m
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080

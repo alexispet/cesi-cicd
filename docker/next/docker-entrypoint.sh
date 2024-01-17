@@ -7,4 +7,6 @@ then
     npm install
 fi 
 
+# php artisan migrate
+
 exec "$@"
