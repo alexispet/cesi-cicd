@@ -3,5 +3,15 @@ services:
     image: ghcr.io/alexispet/cesi-cicd/next:latest
     environment:
       - NODE_ENV=production
-    ports:
-      - "3000:3000"
+    networks:
+      - custom_frontend
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.next-prod.rule=Host(`ec2-15-237-40-167.eu-west-3.compute.amazonaws.com`)"
+      - "traefik.http.routers.next-prod.entrypoints=web"
+
+networks:
+  frontend:
+    external: true
+    name: custom_frontend

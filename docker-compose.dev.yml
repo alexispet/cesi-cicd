@@ -1,0 +1,17 @@
+services:
+  next:
+    image: ghcr.io/alexispet/cesi-cicd/next:develop
+    environment:
+      - NODE_ENV=development
+    networks:
+      - frontend
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.next-dev.rule=Host(`15.237.40.167`)"
+      - "traefik.http.routers.next-dev.entrypoints=web"
+
+networks:
+  frontend:
+    external: true
+    name: custom_frontend
