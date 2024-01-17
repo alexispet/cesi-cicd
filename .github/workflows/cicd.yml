@@ -9,8 +9,21 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Audit URLs using Lighthouse
+        uses: treosh/lighthouse-ci-action@v10
+        with:
+          urls: |
+            http://ec2-15-237-40-167.eu-west-3.compute.amazonaws.com/
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
   lint:
     runs-on: ubuntu-latest
+    continue-on-error: true
     permissions:
       contents: read
       packages: read
@@ -26,6 +39,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   build-and-push-image:
+    needs: [lint]
     runs-on: ubuntu-latest
     permissions:
       contents: read
